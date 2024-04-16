@@ -17,37 +17,31 @@ class ModuleController extends Controller
   public function index()
   {
 
-    // Récupérer les données pour afficher la liste des modules
-    $modules = Module::all();
+ // Récupérer les données pour afficher la liste des modules
+ $modules = Module::all();
 
-    // Récupérer les statistiques générales
-    $totalModules = Module::count();
-    $activeModules = Module::where('status', true)->count();
-    $inactiveModules = Module::where('status', false)->count();
-    
-    // Calculer les pourcentages
-    $activeModulesPercentage = ($totalModules > 0) ? ($activeModules / $totalModules) * 100 : 0;
-    $inactiveModulesPercentage = ($totalModules > 0) ? ($inactiveModules / $totalModules) * 100 : 0;
+ // Récupérer les statistiques générales
+ $totalModules = Module::count();
+ $activeModules = Module::where('status', true)->count();
+ $inactiveModules = Module::where('status', false)->count();
 
-    // Récupérer les statistiques par fabricant et par modèle
-    $modulesByManufacturer = Module::select('manufacturer', \DB::raw('count(*) as total'))
-                                    ->groupBy('manufacturer')
-                                    ->get();
-    $modulesByModel = Module::select('model', \DB::raw('count(*) as total'))
-                                ->groupBy('model')
-                                ->get();
+ // Récupérer les statistiques par fabricant et par modèle
+ $modulesByManufacturer = Module::select('manufacturer', \DB::raw('count(*) as total'))
+                                 ->groupBy('manufacturer')
+                                 ->get();
+ $modulesByModel = Module::select('model', \DB::raw('count(*) as total'))
+                             ->groupBy('model')
+                             ->get();
 
-    // Passer les données récupérées à la vue
-    return view('modules.index', [
-        'modules' => $modules,
-        'totalModules' => $totalModules,
-        'activeModules' => $activeModules,
-        'inactiveModules' => $inactiveModules,
-        'activeModulesPercentage' => $activeModulesPercentage,
-        'inactiveModulesPercentage' => $inactiveModulesPercentage,
-        'modulesByManufacturer' => $modulesByManufacturer,
-        'modulesByModel' => $modulesByModel,
-    ]);
+ // Passer les données récupérées à la vue
+ return view('modules.index', [
+     'modules' => $modules,
+     'totalModules' => $totalModules,
+     'activeModules' => $activeModules,
+     'inactiveModules' => $inactiveModules,
+     'modulesByManufacturer' => $modulesByManufacturer,
+     'modulesByModel' => $modulesByModel,
+ ]);
   }
   /**
    * Store a newly created resource in storage.
