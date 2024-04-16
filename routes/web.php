@@ -37,3 +37,6 @@ Route::get('/modules/{Module}/edit', ModuleController::class .'@edit')->name('mo
 Route::put('/modules/{module}', [ModuleController::class, 'update'])->name('modules.update');
 // deletes a Module
 Route::delete('/modules/{id}', ModuleController::class .'@destroy')->name('modules.destroy');
+// history a Module
+Route::get('/modules/{module}/history', [ModuleController::class, 'showHistory'])->name('modules.history');
+

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Module;
 use Illuminate\Support\Facades\Route;
+use App\Models\Historique;
+use Illuminate\Support\Facades\DB;
+
 
 
 class ModuleController extends Controller
@@ -170,6 +173,51 @@ class ModuleController extends Controller
     return view('modules.edit', compact('module'));
 }
 
+public function showHistory(Module $module)
+{
+    $history = Historique::where('module_id', $module->id)->get();
+
+    // Nombre total de mesures enregistrées sur une période donnée
+    $totalMeasurements = $history->count();
+
+    // Évolution des mesures au fil du temps (par jour, par semaine, par mois)
+    $measurementsByDay = Historique::where('module_id', $module->id)
+        ->select(DB::raw('DATE(mesure_date) as date'), DB::raw('count(*) as count'))
+        ->groupBy(DB::raw('DATE(mesure_date)'))
+        ->get();
+
+    // Tendance des valeurs mesurées au fil du temps (graphique)
+    $measurementsTrend = Historique::where('module_id', $module->id)
+        ->select('mesure_date', 'mesure_value')
+        ->orderBy('mesure_date')
+        ->get();
+
+    // Moyenne, médiane, minimum et maximum des valeurs mesurées
+    $averageValue = $history->avg('mesure_value');
+    $medianValue = $history->median('mesure_value');
+    $minValue = $history->min('mesure_value');
+    $maxValue = $history->max('mesure_value');
+
+    // Nombre de mesures par type de mesure (par exemple, par type de capteur)
+    $measurementsByType = Historique::where('module_id', $module->id)
+        ->select('mesure_type', DB::raw('count(*) as count'))
+        ->groupBy('mesure_type')
+        ->get();
+
+    // Passer les données récupérées à la vue
+    return view('modules.history', [
+        'module' => $module,
+        'history' => $history,
+        'totalMeasurements' => $totalMeasurements,
+        'measurementsByDay' => $measurementsByDay,
+        'measurementsTrend' => $measurementsTrend,
+        'averageValue' => $averageValue,
+        'medianValue' => $medianValue,
+        'minValue' => $minValue,
+        'maxValue' => $maxValue,
+        'measurementsByType' => $measurementsByType,
+    ]);
+}
 
 
 }

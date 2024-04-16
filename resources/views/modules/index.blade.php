@@ -92,7 +92,7 @@
                                             <i class="fas fa-trash-alt"></i> 
                                         </button>
                                     </form>
-                                    <a href="" class="btn btn-info">
+                                    <a href="{{ route('modules.history', $module->id) }}" class="btn btn-info">
         <i class="fas fa-history"></i> 
     </a>
                                 </div>
@@ -105,26 +105,7 @@
         </div>
     </div>
 
-    <!-- Footer  de pages -->
-    <footer class="footer bg-secondary text-light py-3" style="opacity: 0.9;">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>Nom de l'entreprise</h5>
-                    <p>123 Rue de l'Entreprise</p>
-                    <p>Ville, Pays</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contact</h5>
-                    <p>Téléphone : +123456789</p>
-                    <p>Email : info@example.com</p>
-                </div>
-                <div class="col-md-4">
-                    <p>&copy; {{ date('Y') }} Nom de l'entreprise. Tous droits réservés.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+   
 
 </div>
 
