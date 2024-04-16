@@ -15,28 +15,28 @@ use App\Http\Controllers\ModuleController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
-// returns the home page with all modules
-Route::get('/modules', ModuleController::class .'@index')->name('modules.index');
-// returns the form for adding a Module
-Route::get('/modules/create', ModuleController::class . '@create')->name('modules.create');
-// adds a Module to the database
-Route::Post('/modules', ModuleController::class .'@store')->name('modules.store');
-// returns a page that shows a full Module
-Route::get('/modules/{Module}', ModuleController::class .'@show')->name('modules.show');
-// returns the form for editing a Module
-Route::get('/modules/{Module}/edit', ModuleController::class .'@edit')->name('modules.edit');
-// updates a Module
-Route::put('/modules/{module}', [ModuleController::class, 'update'])->name('modules.update');
-// deletes a Module
-Route::delete('/modules/{id}', ModuleController::class .'@destroy')->name('modules.destroy');
-// history a Module
-Route::get('/modules/{module}/history', [ModuleController::class, 'showHistory'])->name('modules.history');
-
+Route::middleware('auth')->group(function () {
+    // returns the home page with all modules
+    Route::get('/modules', [ModuleController::class, 'index'])->name('modules.index');
+    // returns the form for adding a Module
+    Route::get('/modules/create', [ModuleController::class, 'create'])->name('modules.create');
+    // adds a Module to the database
+    Route::post('/modules', [ModuleController::class, 'store'])->name('modules.store');
+    // returns a page that shows a full Module
+    Route::get('/modules/{Module}', [ModuleController::class, 'show'])->name('modules.show');
+    // returns the form for editing a Module
+    Route::get('/modules/{Module}/edit', [ModuleController::class, 'edit'])->name('modules.edit');
+    // updates a Module
+    Route::put('/modules/{module}', [ModuleController::class, 'update'])->name('modules.update');
+    // deletes a Module
+    Route::delete('/modules/{id}', [ModuleController::class, 'destroy'])->name('modules.destroy');
+    // history a Module
+    Route::get('/modules/{module}/history', [ModuleController::class, 'showHistory'])->name('modules.history');
+});

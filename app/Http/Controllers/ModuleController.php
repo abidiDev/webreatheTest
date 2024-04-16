@@ -198,11 +198,19 @@ public function showHistory(Module $module)
     $minValue = $history->min('mesure_value');
     $maxValue = $history->max('mesure_value');
 
-    // Nombre de mesures par type de mesure (par exemple, par type de capteur)
-    $measurementsByType = Historique::where('module_id', $module->id)
-        ->select('mesure_type', DB::raw('count(*) as count'))
-        ->groupBy('mesure_type')
+    // Nombre de mesures par localisation
+    $measurementsBylocalisation = Historique::where('module_id', $module->id)
+        ->select('localisation', DB::raw('count(*) as count'))
+        ->groupBy('localisation')
         ->get();
+
+    // Calcul de l'écart-type
+    $mean = $history->avg('mesure_value');
+    $squaredDifferences = $history->map(function ($item) use ($mean) {
+        return pow($item->mesure_value - $mean, 2);
+    });
+    $variance = $squaredDifferences->avg();
+    $standardDeviation = sqrt($variance);
 
     // Passer les données récupérées à la vue
     return view('modules.history', [
@@ -215,7 +223,8 @@ public function showHistory(Module $module)
         'medianValue' => $medianValue,
         'minValue' => $minValue,
         'maxValue' => $maxValue,
-        'measurementsByType' => $measurementsByType,
+        'measurementsBylocalisation' => $measurementsBylocalisation,
+        'standardDeviation' => $standardDeviation,
     ]);
 }
 
