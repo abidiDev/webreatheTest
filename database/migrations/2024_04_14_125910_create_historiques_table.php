@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('historiques', function (Blueprint $table) {
             $table->id();
+            $table->float('mesure_value');
+            $table->string('mesure_type');
+            $table->dateTime('mesure_date');
+            $table->boolean('module_status')->nullable();
+            $table->string('localisation')->nullable();
+            $table->text('commentaire')->nullable();
             $table->unsignedBigInteger('module_id');
             $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
             $table->timestamps();

@@ -32,10 +32,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    //oneToMany with Module
-    public function modules() {
-        return $this->hasMany(Module::class);
-    }
+    
 
     /**
      * The attributes that should be cast.
